@@ -1,18 +1,24 @@
 # Basic Social Media Application
 
-Application was created to test the coursework completed.
+Application was created to fulfill the requirement for the final project of the Nano-degree.
 
-It impliments a basic version that has a simple login using Auth0 and Google those contained in the Udacity AWS cloud developer course.
+It impliments a basic video/image sharing app that has a simple login using Auth0 and Google those contained in the Udacity AWS cloud developer course.
 
-The application was created using the serverless AWS template and then modified to adjust the folder structure to include a backend-api and frontend application.  The backend is created via serverless.yml and all AWS services are created as part of the build.  The frontend utilises a basic React SPA.
+The application was created using the serverless AWS template lesson project and modified the folder structure to include a backend-api and frontend application.  
 
-The serverless backend used project 4 template as a basis to create the DynamoDB tables for the Video and Image content.
+The backend is created via serverless.yml and all AWS services are created as part of the build.  The frontend utilises a basic React SPA.
+
+The serverless backend used project 4 template as a basis to create the DynamoDB tables for the Video and Image content, S3 buckets (Separate bucket for Video and Images) and Lambda functions.
 
 Currently the server uses Auth0 to authenticate a user and get an id for the user to be able to store comments against.
 
-The front-end is a basic Angular 12 SPA that uses the Angular material to present the layout for the items in the application.
+The frontend is a basic React SPA that uses the material-ui for layout.
+ - AUTH was re-used from the cloud-developer lesson 4 client application
 
 
+# Original framework from the project can be found
+
+# Final lesson 4 project submisison that this was based on can be found.
 
 --------------
 
