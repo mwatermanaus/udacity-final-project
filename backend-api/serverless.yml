@@ -1,0 +1,52 @@
+service:
+  name: serverless-social-media-app
+
+plugins:
+  - serverless-webpack
+  - serverless-iam-roles-per-function
+  - serverless-reqvalidator-plugin
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'eu-west-1'}
+
+  environment:
+    TOPIC_TABLE: Topics-${self:provider.stage}
+    TOPIC_CREATED_AT_INDEX: TopicsCreatedAtIndex
+    USER_TABLE: Users-${self:provider.stage}
+    FEED_TABLE: Feed-${self:provider.stage}
+    FEED_CREATED_AT_INDEX: FeedCreatedAtIndex
+    IMAGES_S3_BUCKET: social-images-${self:provider.stage}
+    IMAGES_THUMBNAIL_S3_BUCKET: social-image-thumbnails-${self:provider.stage}
+    VIDEOS_S3_BUCKET: social-videos-${self:provider.stage}
+    VIDEOS_THUMBNAIL_S3_BUCKET: social-video-thumbnails-${self:provider.stage}
+    SIGNED_URL_EXPIRATION: 300
+
+
+functions:
+
+  Auth:
+    handler: src/lambda/auth/auth0Authorizer.handler
+
+  GetTopics:
+    handler: src/lambda/http/getTopics.handler
+    events:
+      - http:
+          method: get
+          path: topics
+          cors: true
+          # reqValidatorName: RequestBodyValidator
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TOPIC_TABLE} 
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TOPIC_TABLE}/index/${self:provider.environment.TOPIC_CREATED_AT_INDEX}
+  
