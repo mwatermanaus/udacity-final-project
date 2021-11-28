@@ -7,13 +7,13 @@ import * as middy from 'middy'
 
 import { cors, httpErrorHandler } from 'middy/middlewares'
 
-import { getAllTopicsForUser } from '../businessLogic/topicLogic'
+import { getUserDetails } from '../businessLogic/userLogic'
 
-const logger = createLogger('getTopics')
+const logger = createLogger('getDispplayName')
 
 export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     // TODO: Get all TODO items for a current user
-    logger.info('Processing todo event', event)
+    logger.info('Getting the user details for ', event)
     
     if (event.headers.Authorization.split(' ').length !== 2) {
       return {
@@ -24,12 +24,12 @@ export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGat
       }
     }
     
-    const topicList = await getAllTopicsForUser(event)
+    const displayName = await getUserDetails(event)
   
     return  {
       statusCode: 200,
       body: JSON.stringify({
-        "items": topicList
+        "displayName": displayName
       })
     }
   }

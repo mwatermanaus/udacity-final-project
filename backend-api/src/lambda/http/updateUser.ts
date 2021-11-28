@@ -4,31 +4,31 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 
-import { CreateTopicRequest } from '../../requests/CreateTopicRequest'
+import { User } from '../../models/User'
 import { createLogger } from '../../utils/logger'
 import { getUserId } from '../utils'
-import { createTopicForUser } from '../businessLogic/topicLogic'
+import { updateUserDisplayName } from '../businessLogic/userLogic'
 
-const logger = createLogger('createTopic')
+const logger = createLogger('updateUser')
+
 
 export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const newTopic: CreateTopicRequest = JSON.parse(event.body)
 
-    if (!newTopic.title) {
+    const updatedUser: User = JSON.parse(event.body)
+    logger.info('Updating user ', JSON.stringify(updatedUser))
+    if (!updatedUser.displayName) {
         return {
             statusCode: 400,
-            body: 'No topic title entered.'
+            body: 'No display name has been entered.'
         }
     }
 
-    logger.info('Creating new topic ', {message: JSON.stringify(newTopic) + ' creation started'})
-
     const userId = getUserId(event)
-    const topicItem = await createTopicForUser(newTopic, userId)
+    const userDisplay = await updateUserDisplayName(updatedUser.displayName, userId)
 
     return {
         statusCode: 201,
-        body: JSON.stringify({"New Topic": topicItem})
+        body: JSON.stringify({"New display name": userDisplay})
     }
 
 })

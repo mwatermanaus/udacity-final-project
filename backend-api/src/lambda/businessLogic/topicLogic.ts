@@ -13,16 +13,18 @@ export async function getAllTopicsForUser(event: APIGatewayProxyEvent): Promise<
     return topicDbAccess.getAllTopicsForUser(userId)    
 }
 
-export async function createTopic(createTopicRequest: CreateTopicRequest, userId: string): Promise<Topic> {
+export async function createTopicForUser(
+        createTopicRequest: CreateTopicRequest, 
+        userId: string): Promise<Topic> {
     const topicId = uuid.v4()
     const timestamp = new Date().toISOString()
-
+    console.log(userId)
     const topic: Topic = {
-        creatorUserId: userId,
-        createdTime: timestamp,
+        userId: userId,
+        createdAt: timestamp,
         topicId: topicId,
         ...createTopicRequest
 
     }
-    return await topicDbAccess.createTopic(topic)
+    return await topicDbAccess.createTopicForUser(topic)
 }

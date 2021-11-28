@@ -6,7 +6,7 @@ import { Topic } from 'src/models/Topic'
 export class TopicDBAccess {
 
     constructor(
-        private readonly documentClient: DocumentClient = AWS.DynamoDB.DocumentClient(),
+        private readonly documentClient: DocumentClient = new AWS.DynamoDB.DocumentClient(),
         private readonly topicTable = process.env.TOPIC_TABLE,
         private readonly topicIndex = process.env.TOPIC_CREATED_AT_INDEX
     ) {}
@@ -26,13 +26,18 @@ export class TopicDBAccess {
         return topicsList as Topic[]
     }
 
-    async createTopic(topic: Topic): Promise<Topic> {
+    async createTopicForUser(newTopic: Topic): Promise<Topic> {
+        console.log('Starting put of ', JSON.stringify(newTopic))
+        const topic:Topic = {
+            ...newTopic
+        } 
+
         await this.documentClient.put({
             TableName: this.topicTable,
             Item: topic
         }).promise()
 
-        return topic
+        return newTopic
     }
 }
 
