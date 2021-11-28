@@ -8,6 +8,7 @@ import Header from './header/header';
 import Footer from './footer/footer';
 import Auth from './auth/Auth';
 import { getSupportedCodeFixes } from 'typescript';
+import LogIn from './components/LogIn'
 
 export interface AppProps {
   auth: Auth
@@ -84,7 +85,11 @@ export default class App extends Component<AppProps, AppState> {
     }
   }
 
-
+  generateCurrentPage() {
+    if (!this.props.auth.isAuthenticated()) {
+      return <LogIn auth={this.props.auth} />
+    }
+  }
 
 
 }

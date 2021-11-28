@@ -1,4 +1,5 @@
 import * as AWS from 'aws-sdk'
+import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 
 import { Topic } from 'src/models/Topic'
 
@@ -10,14 +11,19 @@ export class TopicDBAccess {
         private readonly topicIndex = process.env.TOPIC_CREATED_AT_INDEX
     ) {}
 
-    aysnc getAllTopics(): Promise<Topic[]>{
+    async getAllTopicsForUser(userId: string): Promise<Topic[]>{
         const result = await this.documentClient.query({
             TableName: this.topicTable,
-            IndexName: this.topicIndex
+            IndexName: this.topicIndex,
+            KeyConditionExpression: 'userId = :userId',
+            ExpressionAttributeValues: {
+                ':userId': userId
+            },
+            ScanIndexForward: false
         }).promise()
-
+        console.log('UserID ', userId)
         const topicsList = result.Items
-        return topicsList
+        return topicsList as Topic[]
     }
 
     async createTopic(topic: Topic): Promise<Topic> {

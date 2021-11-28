@@ -25,6 +25,11 @@ provider:
     VIDEOS_THUMBNAIL_S3_BUCKET: social-video-thumbnails-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
+  custom:
+  webpack:
+    webpackConfig: ./webpack.config.js 
+    includeModules: true
+
 
 functions:
 
