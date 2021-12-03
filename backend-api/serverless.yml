@@ -78,7 +78,7 @@ functions:
     events:
       - http:
           method: post
-          path: user
+          path: newuser
           cors: true
           # reqValidatorName: RequestBodyValidator
     iamRoleStatements:
@@ -94,7 +94,7 @@ functions:
     events:
       - http:
           method: post
-          path: topics
+          path: user
           cors: true
           # reqValidatorName: RequestBodyValidator
     iamRoleStatements:
@@ -103,7 +103,27 @@ functions:
           - dynamodb:Scan
           - dynamodb:PutItem
           - dynamodb:GetItem
+          - dynamodb:UpdateItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_TABLE}
+
+  GetUserDetails:
+    handler: src/lambda/http/getUserDetails.handler
+    events:
+      - http:
+          method: get
+          path: user
+          cors: true
+          # reqValidatorName: RequestBodyValidator
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Scan
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_TABLE}/index/${self:provider.environment.USER_DISPLAY_NAME_INDEX}
 
 
 resources:
